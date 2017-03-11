@@ -149,7 +149,7 @@ class CreateBucketListItems(Resource):
 			return({'message': 'bad request'}, 400)
 
 class UpdateBucketListItem(Resource):
-    """ This class updates items for a particular bucket list """
+	""" This class updates items for a particular bucket list """
 	@auth.login_required
 	def put(self, id, item_id):
 		try:
