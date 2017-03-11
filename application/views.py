@@ -92,7 +92,7 @@ class GetBucketList(Resource):
 			return({'message': 'bad request'}, 404)
 
 class DeleteBucketList(Resource):
-""" This class handles the deletion of a single bucket list"""
+	""" This class handles the deletion of a single bucket list"""
 	@auth.login_required
 	def delete(self,id):
 		try:
