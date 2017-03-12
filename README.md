@@ -50,4 +50,4 @@ nosetests --with-coverage
 ```
 
 ## Documentation & Usage
-    Click on [this link] (https://www.python.org/downloads/) to view see example on how to consume the API
+Click on [this link] (https://www.python.org/downloads/) to view see example on how to consume the API
