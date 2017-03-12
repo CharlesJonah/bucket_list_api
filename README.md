@@ -43,11 +43,11 @@ python server.py db init
 python server.py db migrate
 python server.py db upgrade
 
-## Documentation & Usage
-    Click on [this link] (https://www.python.org/downloads/) to view see example on how to consume the API
-
 ## Testing
 To run the tests for the app, and see the coverage, run
 ```
 nosetests --with-coverage
 ```
+
+## Documentation & Usage
+    Click on [this link] (https://www.python.org/downloads/) to view see example on how to consume the API
