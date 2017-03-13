@@ -53,12 +53,14 @@ class GetBucketLists(Resource):
 		q = request.args.get('q') # the search parameter
 		page = request.args.get('page') # the current page for pagination
 		limit = request.args.get('limit') # the limit numer of items for each page
-		if q:
+		if q and page and limit:
 			bucket_lists = BucketListModel.query.filter(BucketListModel.name.ilike('%' + q + "%" )).filter_by(created_by=g.user.email).paginate(int(page), int(limit), False)
 			buckets = bucket_lists.items
-		else:
+		elif page and limit:
 			bucket_lists = BucketListModel.query.filter_by(created_by = g.user.email).paginate(int(page), int(limit), False)
 			buckets = bucket_lists.items
+		else:
+			return({'message': 'bad request'}, 400)
 
 		if buckets:
 			 if bucket_lists.has_next:
