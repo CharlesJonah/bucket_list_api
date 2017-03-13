@@ -20,7 +20,7 @@ class BaseTest(unittest.TestCase):
         login_details = {"email":"mutua.charles48@gmail.com","password":"124245yytstts"}
         response =  self.client.post("v1/auth/login",data = json.dumps(login_details),
                                      content_type='application/json')  
-        self.token = json.loads(response.get_data())['Authorization']
+        self.token = json.loads(response.get_data(as_text=True))['Authorization']
       
 class TestUserRegistration(BaseTest):
     """ This class holds all the test cases for registration logic"""
