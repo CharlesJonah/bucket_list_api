@@ -1,4 +1,4 @@
-from flask import Flask, request, g
+from flask import Flask, request, g, render_template
 from flask_restful import Resource, marshal
 from application.validate import Validation
 from application.serializer import bucket_list_serializer
@@ -9,6 +9,7 @@ from .models import UserModel, BucketListModel, ItemsModel, db
 valid = Validation() # valid is an instance of Validation class that validates json input for the API
 
 auth = HTTPTokenAuth(scheme='Token') # creates an instance of HTTPTokenAuth
+
 
 @auth.verify_token
 def verify_token(token):
