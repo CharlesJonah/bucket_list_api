@@ -8,7 +8,7 @@ class Validation():
         """This method validates if the user has given all the registration details required 
            for registrationv in the correct format"""
         if credentials['email'] == '' or credentials['password'] == '':
-            return({'message': 'Please provide all credentials'}, 400)
+            return({'message': 'Please provide email and the password.'}, 400)
         else:
             if len(credentials['password']) < 8:
                 return({'message': 'password too short'}, 400)
@@ -24,7 +24,7 @@ class Validation():
         """This method validates all details required for bucket list
             creation"""
         if bucket_list['name'] =='':
-            return({'message': 'please provide all the details'}, 400) 
+            return({'message': 'bucket list name is missing'}, 400) 
         else:
                 if BucketListModel.query.filter_by(name = bucket_list['name']).first() is not None:
                     return ({'message': 'the bucketlist already exists'},409)
@@ -51,14 +51,14 @@ class Validation():
             creation"""
 
         if bucket_list_items['items'] == "":
-            return({'message': 'bad request'}, 400)
+            return({'message': 'bad request. no items to be added'}, 400)
         else:
             if type(bucket_list_items["items"] ) is not list:
-                return({'message': 'bad request'}, 400)
+                return({'message': 'bad request. items should be in a list format'}, 400)
             else:
                 for item in bucket_list_items["items"]:
                     if item['name'] == '' or item['done'] == '':
-                        return({'message': 'bad request'}, 400)
+                        return({'message': 'bad request.name is missing in your item'}, 400)
                     else:
                         item = ItemsModel(name = item["name"], done = item["done"], bucketlist_id = id)
                         db.session.add(item)
