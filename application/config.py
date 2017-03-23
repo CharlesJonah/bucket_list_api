@@ -1,5 +1,4 @@
 import os
-import dj_database_url
 
 class Config(object):
     """ This class configures the parameters to be used in a production enviroment"""
