@@ -29,11 +29,7 @@ class UserRegistration(Resource):
 				response = valid.validate_register_user(credentials)
 				return response
 		except Exception as e:
-			return({'message': 'bad request'}, 400)
-
-	def get(self):
-		'''Ensures that get method is not allowed for registration'''
-		return({'message': 'Method is not allowed'}, 405)
+			return{'message': 'bad request.' + str(e)}, 400
 
 class CreateBucketList(Resource):
 	""" This class handles the creation of a new create bucket list """
@@ -45,7 +41,7 @@ class CreateBucketList(Resource):
 				response = valid.validate_create_bucket_list(bucket_list)
 				return response
 		except Exception as e:
-			return({'message': 'bad request'}, 400)
+			return{'message': 'bad request.' + str(e)}, 400
 
 class GetBucketLists(Resource):
 	""" This class handles the retrieval of all created bucket list """
@@ -61,26 +57,36 @@ class GetBucketLists(Resource):
 			bucket_lists = BucketListModel.query.filter_by(created_by = g.user.email).paginate(int(page), int(limit), False)
 			buckets = bucket_lists.items
 		else:
-			return({'message': 'bad request'}, 400)
+			return({'message': 'bad request url query is in wrong format'}, 400)
 
 		if buckets:
 			 if bucket_lists.has_next:
-			 	next_page = str(request.url_root) + 'v1/bucketlists?q=' + q + '&page=' + str(int(page) + 1)
+			 	next_page = str(request.url_root) + 'v1/bucketlists?page=' + str(int(page) + 1)  + '&limit=' + str(int(limit))
 			 else:
 				 next_page = 'None'
 
 			 if bucket_lists.has_prev:
-					prev = str(request.url_root) + 'v1/bucketlists?q=' + \
-					q + '&page=' + str(int(page) - 1)
+					prev = str(request.url_root) + 'v1/bucketlists?page=' + str(int(page) - 1) + '&limit=' + str(int(limit))
 			 else:
 					prev = 'None'
 			 bkts = [bucket for bucket in buckets]
 			 return({'bucketlists': marshal(bkts, bucket_list_serializer), 'next': next_page,
 					'prev': prev},200)
 		else:
-			return([],404)
-			
+			return({'message': 'not found'}, 404)
 
+class GetAllBucketLists(Resource):
+	""" This class handles the retrieval of all created bucket list """
+	@auth.login_required
+	def get(self):
+		try:	
+			bucket_lists = BucketListModel.query.filter_by(created_by = g.user.email).all()
+			return({'bucketlists': marshal(bucket_lists, bucket_list_serializer)},200)
+		except Exception as e:
+			print(str(e))
+			return({'message': 'not found'}, 400)
+
+			
 class GetBucketList(Resource):
 	""" This class handles the retrival of a single bucket list"""
 	@auth.login_required
@@ -92,7 +98,7 @@ class GetBucketList(Resource):
 			else:
 				return({'message': 'not found'}, 404)
 		except Exception as e:
-			return({'message': 'bad request'}, 404)
+			return({'message': 'bad request'+ str(e)}, 404)
 
 class DeleteBucketList(Resource):
 	""" This class handles the deletion of a single bucket list"""
@@ -107,7 +113,7 @@ class DeleteBucketList(Resource):
 			else:
 				return({'message': 'not found'}, 404)
 		except Exception as e:
-			return({'message': 'bad request'}, 400)
+			return{'message': 'bad request'+ str(e)}
 
 class UpdateBucketList(Resource):
 	""" This class handles an update for a single bucket list"""
@@ -126,14 +132,13 @@ class UpdateBucketList(Resource):
 							db.session.commit()
 						return({'message': 'ok'},200)
 					else:
-						return({'message': 'bad request'}, 400)
+						return({'message': 'bad request. name is empty'}, 400)
 				else:
-					return({'message': 'bad request'}, 400)
+					return({'message': 'bad request. could not get the update object from user'}, 400)
 			else:
 				return({'message': 'not found'}, 404)
 		except Exception as e:
-			print(str(e))
-			return({'message': 'bad request'}, 400)
+			return{'message': 'bad request' + str(e)}
 
 class CreateBucketListItems(Resource):
 	""" This class creates items for a particular bucket list"""
@@ -173,7 +178,7 @@ class UpdateBucketListItem(Resource):
 					return ({'message': 'the bucketlist item does not exist'}, 404)
 		except Exception as e:
 			print(str(e))
-			return({'message': 'bad request'}, 400)
+			return {'message': 'bad request'}
 
 class DeleteBucketListItem(Resource):
 	"""This class deletes an item for a particular bucket list"""
@@ -192,7 +197,7 @@ class DeleteBucketListItem(Resource):
 					return ({'message': 'the bucketlist item does not exist'}, 404)
 		except Exception as e:
 			print(str(e))
-			return({'message': 'bad request'}, 400)
+			return{'message': 'bad request'}
 			
 class UserLogin(Resource):
 	"""This class is authenticates the user and generates the token"""
@@ -203,7 +208,7 @@ class UserLogin(Resource):
 				response = valid.validate_login_credentials(credentials)
 				return response
 		except Exception as e:
-			return({'message': 'bad request'}, 400)
+			return {'message': 'bad request'}
 	
 
 
